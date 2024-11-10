@@ -20,9 +20,9 @@ import { particleWallet } from '@particle-network/rainbowkit-ext';
 
 import '@rainbow-me/rainbowkit/styles.css';
 
-import { configureChains, createConfig, WagmiConfig } from 'wagmi';
-import { arbitrum, mainnet, optimism, polygon } from 'wagmi/chains';
-import { publicProvider } from 'wagmi/providers/publi';
+// import { configureChains, createConfig, WagmiConfig } from 'wagmi';
+// import { arbitrum, mainnet, optimism, polygon } from 'wagmi/chains';
+// import { publicProvider } from 'wagmi/providers/public';
 
 
 const NAV_ITEMS = [
@@ -58,48 +58,21 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     wallet: { displayWalletEntry: true },
   }), []);
 
-  const { chains, publicClient, webSocketPublicClient } = configureChains(
-    [mainnet, polygon, optimism, arbitrum],
-    [publicProvider()]
-  );
+const { connect } = useConnect();
+const { connectionStatus } = useParticleConnect();
+const { disconnect } = useDisconnect();
 
-  const commonOptions = { chains, projectId: process.env.REACT_APP_WALLETCONNECT_PROJECT_ID as string };
-
-  const popularWallets = useMemo(() => ({
-    groupName: 'Popular',
-    wallets: [
-      particleWallet({ chains, authType: 'google' }),
-      particleWallet({ chains, authType: 'facebook' }),
-      particleWallet({ chains, authType: 'apple' }),
-      particleWallet({ chains }),
-      injectedWallet(commonOption),
-      rainbowWallet(commonOptions),
-      coinbaseWallet({ appName: 'RainbowKit demo', ...commonOptions }),
-      metaMaskWallet(commonOptions),
-      walletConnectWallet(commonOptions),
-    ],
-  }), [particle]);
-
-  const connectors = connectorsForWallets([
-    popularWallets,
-    {
-      groupName: 'Other',
-      wallets: [
-        argentWallet(commonOptions),
-        trustWallet(commonOptions),
-        omniWallet(commonOptions),
-        imTokenWallet(commonOptions),
-        ledgerWallet(commonOptions),
-      ],
-    },
-  ]);
-
-  const wagmiClient = createConfig({
-    autoConnect: false,
-    connectors,
-    publicClient,
-    webSocketPublicClient,
-  });
+useEffect(() => {
+  const authType = getLatestAuthType();
+  if (connectionStatus === 'connected' && authType && isSocialAuthType(authType)) {
+      connect({
+          connector: particleWagmiWallet({ socialType: authType }),
+      });
+  }
+  const onDisconnect = () => disconnect();
+  particleAuth.on(AuthCoreEvent.ParticleAuthDisconnect, onDisconnect);
+  return () => particleAuth.off(AuthCoreEvent.ParticleAuthDisconnect, onDisconnect);
+}, [connect, connectionStatus, disconnect]);
 
   const handleLinkClick = (path: string) => {
     if (!isConnected && path !== '/') {
