@@ -49,30 +49,30 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const router = useRouter(); // Initialize useRouter
 
 
-  const particle = useMemo(() => new ParticleNetwork({
-    projectId: process.env.REACT_APP_PROJECT_ID as string,
-    clientKey: process.env.REACT_APP_CLIENT_KEY as string,
-    appId: process.env.REACT_APP_APP_ID as string,
-    chainName: 'Ethereum',
-    chainId: 1,
-    wallet: { displayWalletEntry: true },
-  }), []);
+//   const particle = useMemo(() => new ParticleNetwork({
+//     projectId: process.env.REACT_APP_PROJECT_ID as string,
+//     clientKey: process.env.REACT_APP_CLIENT_KEY as string,
+//     appId: process.env.REACT_APP_APP_ID as string,
+//     chainName: 'Ethereum',
+//     chainId: 1,
+//     wallet: { displayWalletEntry: true },
+//   }), []);
 
-const { connect } = useConnect();
-const { connectionStatus } = useParticleConnect();
-const { disconnect } = useDisconnect();
+// const { connect } = useConnect();
+// const { connectionStatus } = useParticleConnect();
+// const { disconnect } = useDisconnect();
 
-useEffect(() => {
-  const authType = getLatestAuthType();
-  if (connectionStatus === 'connected' && authType && isSocialAuthType(authType)) {
-      connect({
-          connector: particleWagmiWallet({ socialType: authType }),
-      });
-  }
-  const onDisconnect = () => disconnect();
-  particleAuth.on(AuthCoreEvent.ParticleAuthDisconnect, onDisconnect);
-  return () => particleAuth.off(AuthCoreEvent.ParticleAuthDisconnect, onDisconnect);
-}, [connect, connectionStatus, disconnect]);
+// useEffect(() => {
+//   const authType = getLatestAuthType();
+//   if (connectionStatus === 'connected' && authType && isSocialAuthType(authType)) {
+//       connect({
+//           connector: particleWagmiWallet({ socialType: authType }),
+//       });
+//   }
+//   const onDisconnect = () => disconnect();
+//   particleAuth.on(AuthCoreEvent.ParticleAuthDisconnect, onDisconnect);
+//   return () => particleAuth.off(AuthCoreEvent.ParticleAuthDisconnect, onDisconnect);
+// }, [connect, connectionStatus, disconnect]);
 
   const handleLinkClick = (path: string) => {
     if (!isConnected && path !== '/') {
