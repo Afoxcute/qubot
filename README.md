@@ -61,14 +61,5 @@ The application is structured as follows:
   - `JoinGame.tsx`: UI for joining a game.
   - `GameInterface.tsx`: Displays the game in progress.
 
-## Team Information
 
-- **Yinkatotti**: Solidity Developer  
-  Yinkatotti is responsible for developing the smart contracts that power the rock-paper-scissors game, ensuring secure and efficient game logic.
 
-- **Ayoashy**: Frontend Engineer  
-  Ayoashy focuses on building the user interface of the application, creating an engaging and intuitive experience for players.
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
